@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import DropDown from '../../Components/DropDown';
+import TextInput from '../../Components/TextInput';
 import ProgressBar from '../../Components/ProgressBar';
 import Loader from '../../Components/Loader';
 
@@ -20,6 +21,7 @@ const Rates = () => {
     const [exchangeRate, setExchangeRate] = useState(0.7456);
     const [progression, setProgression] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [amount, setAmount] = useState('');
 
     const Flag = ({ code }) => (
         <img alt={code || ''} src={`/img/flags/${code || ''}.svg`} width="20px" className={classes.flag} />
@@ -46,10 +48,25 @@ const Rates = () => {
         });
     });
 
+    const handleAmountChange = (e) => {
+        const value = e.target.value;
+        if (!isNaN(value)) {
+            setAmount(value);
+        }
+    };
+
     return (
         <div className={classes.container}>
             <div className={classes.content}>
                 <div className={classes.heading}>Currency Conversion</div>
+
+                <TextInput
+                    label="Amount"
+                    value={amount}
+                    onChange={handleAmountChange}
+                    placeholder="Enter amount"
+                    className={classes.amountInput}
+                />
 
                 <div className={classes.rowWrapper}>
                     <div>
