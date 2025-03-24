@@ -58,3 +58,45 @@
 .slow {
     transition: all 1s cubic-bezier(0.55, 0.055, 0.675, 0.19) !important;
 }
+
+.result {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.result .label {
+    font-size: 14px;
+    color: #6D7587;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.result p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.trueAmount,
+.markedUpAmount {
+    font-size: 32px;
+    font-weight: 600;
+    color: #142557;
+    margin-top: 5px;
+    padding-left: 15px;
+}
+
+.trueAmount {
+    border-left: 5px solid #2d88d3;
+}
+
+.markedUpAmount {
+    border-left: 5px solid #ff7f50;
+}
+
