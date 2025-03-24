@@ -10,7 +10,7 @@ import { ReactComponent as Transfer } from '../../Icons/Transfer.svg';
 import classes from './Rates.module.css';
 
 import CountryData from '../../Libs/Countries.json';
-import countryToCurrency from '../../Libs/CountryCurrency.json';
+import countryCurrency from '../../Libs/CountryCurrency.json';
 
 const countries = CountryData.CountryCodes;
 const MARKUP_PERCENTAGE = 0.005; // 0.5% markup
@@ -31,14 +31,35 @@ const Rates = () => {
     const fetchData = async () => {
         if (!loading) {
             setLoading(true);
+            try {
+                const sellCurrencyCode = countryCurrency[fromCurrency];
+                const buyCurrencyCode = countryCurrency[toCurrency];
 
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+                const url = `https://rates.staging.api.paytron.com/rate/public?buyCurrency=${buyCurrencyCode}&sellCurrency=${sellCurrencyCode}`;
 
-            setLoading(false);
+                const options = {
+                    method: 'GET',
+                    headers: { 
+                        accept: 'application/json',
+                        'content-type': 'application/json'
+                    }
+                };
+
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setExchangeRate(data.retailRate);
+            } catch (error) {
+                console.error('Failed to fetch live rate:', error);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
-    // Demo progress bar moving :)
     useAnimationFrame(!loading, (deltaTime) => {
         setProgression((prevState) => {
             if (prevState > 0.998) {
@@ -84,9 +105,9 @@ const Rates = () => {
                         <DropDown
                             leftIcon={<Flag code={fromCurrency} />}
                             label={'From'}
-                            selected={countryToCurrency[fromCurrency]}
+                            selected={countryCurrency[fromCurrency]}
                             options={countries.map(({ code }) => ({
-                                option: countryToCurrency[code],
+                                option: countryCurrency[code],
                                 key: code,
                                 icon: <Flag code={code} />,
                             }))}
@@ -109,9 +130,9 @@ const Rates = () => {
                         <DropDown
                             leftIcon={<Flag code={toCurrency} />}
                             label={'To'}
-                            selected={countryToCurrency[toCurrency]}
+                            selected={countryCurrency[toCurrency]}
                             options={countries.map(({ code }) => ({
-                                option: countryToCurrency[code],
+                                option: countryCurrency[code],
                                 key: code,
                                 icon: <Flag code={code} />,
                             }))}
